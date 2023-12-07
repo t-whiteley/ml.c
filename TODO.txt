@@ -1,0 +1,2 @@
+* need to add function to delete dupes of inputs/layer1 arrays
+    * once done calculate() and cost() should be easy
