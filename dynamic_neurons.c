@@ -88,10 +88,12 @@ struct Model* init_model(TreeNode* neuron_config, double eps, double rate) {
 
 double calculate_out(Model* m, double* data, int data_len) {
     if (data_len == m->inputs_len) {
-        printf("yup");
+        // here i set the input nodes value to the inputs
         for (int i = 0; i < data_len; i++) {
             m->inputs[i]->data = data[i];
+            printf("i: %d, in: %f, value: %f\n", i, data[i], m->inputs[i]->data);
         }
+        // here i need to recursively iterate over structure
     }
     return 0;
 }
@@ -100,6 +102,7 @@ double calculate_out(Model* m, double* data, int data_len) {
 double cost(Model* m, double** data, int data_cols, int data_rows) {
     double result = 0;
     for (int i = 0; i < data_rows; i++) {
+        printf("Data %d\n", i);
         double out = calculate_out(m, data[i], data_cols-1);
         double diff = out - data[i][data_cols-1];
         result += diff * diff;
@@ -118,14 +121,6 @@ int main() {
     // makes different rand values each time
     srand(time(NULL));
 
-    // define training data
-    int cols = 3;
-    int rows = 4;
-    int data[][3] = {
-        {0, 0, 0},
-        {0, 1, 1},
-        {1, 0, 1},
-        {1, 1, 0}};
 
     // define the structure of neural network
     TreeNode* out = output_node();
@@ -140,17 +135,44 @@ int main() {
     print_structure(out);
     printf("---------\n");
 
-
-
-
     Model* m = init_model(out, 0.1, 0.1);
     print_structure(m->struct_start);
+    printf("---------\n");
 
-    double c1 = cost(m, data, cols, rows);
+
+
+    // define training data
+    double data[][3] = {
+        {0, 0, 0},
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}};
+
+    int rows = sizeof(data) / sizeof(data[0]);
+    int cols = sizeof(data[0]) / sizeof(data[0][0]);
+
+    double **dynamic_data = (double **)malloc(rows * sizeof(double *));
+    for (int i = 0; i < rows; i++) {
+        dynamic_data[i] = (double *)malloc(cols * sizeof(double));
+        for (int j = 0; j < cols; j++) {
+            dynamic_data[i][j] = data[i][j];
+        }
+    }
+
+
+
+    double c1 = cost(m, dynamic_data, cols, rows);
     printf("%f", c1);
 
 
-    // always free structure by the root -> output
+
+
+
+    // free memory
+    for (int i = 0; i < rows; i++) {
+        free(dynamic_data[i]);
+    }
+    free(dynamic_data);
     free(m);
     free_structure(out);
     return 0;
