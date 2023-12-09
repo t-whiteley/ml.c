@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -g
-LDFLAGS =
+
 
 SRC = dynamic_neurons.c neuron_structure.c
 OBJ = $(SRC:.c=.o)

@@ -86,6 +86,22 @@ struct Model* init_model(TreeNode* neuron_config, double eps, double rate) {
 }
 
 
+double rec_find_output(TreeNode* root) {
+    if (!(root->num_children)) {
+        return root->data;
+    }
+    double output = root->bias;
+    for (int i = 0; i < root->num_children; i++) {
+        double x = rec_find_output(root->children_nodes[i]);
+        double w = root->children_nodes[i]->weight;
+        output += x*w;
+    }
+    return output;
+}
+
+
+
+
 double calculate_out(Model* m, double* data, int data_len) {
     if (data_len == m->inputs_len) {
         // here i set the input nodes value to the inputs
@@ -93,7 +109,7 @@ double calculate_out(Model* m, double* data, int data_len) {
             m->inputs[i]->data = data[i];
             printf("i: %d, in: %f, value: %f\n", i, data[i], m->inputs[i]->data);
         }
-        // here i need to recursively iterate over structure
+        return rec_find_output(m->struct_start);
     }
     return 0;
 }
@@ -102,9 +118,9 @@ double calculate_out(Model* m, double* data, int data_len) {
 double cost(Model* m, double** data, int data_cols, int data_rows) {
     double result = 0;
     for (int i = 0; i < data_rows; i++) {
-        printf("Data %d\n", i);
         double out = calculate_out(m, data[i], data_cols-1);
         double diff = out - data[i][data_cols-1];
+        printf("Data %d, out %f\n", i, out);
         result += diff * diff;
     }
     return result /= data_rows;
