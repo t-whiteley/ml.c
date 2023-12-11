@@ -98,7 +98,7 @@ void rec_print_structure(TreeNode* root, int depth) {
     for (int i = 0; i < depth; i++) {
         printf("  ");
     }
-    printf("%f\n", root->data);
+    printf("%f\n", root->bias);
     if (!(root->num_children)) {
         return;
     }

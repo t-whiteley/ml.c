@@ -1,7 +1,2 @@
-* add recursive function that
-    * goes over the nodes in the structure
-    * wiggles a factor, checks cost, wiggles back
-    * sends the positive wiggle and pointer to a function that will change it permanently
-
-
+* include sigmoid function
 * clean main(), abstract it
