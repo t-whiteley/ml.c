@@ -1,4 +1,4 @@
-## ml_framework.c
+## ml.c
 
 A basic machine learning framework built in C.
 
